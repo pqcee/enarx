@@ -15,7 +15,7 @@ use der::{Decode, Encode};
 use percent_encoding::percent_decode;
 use x509_cert::Certificate;
 
-const FMSPC_URL: &str = "https://api.trustedservices.intel.com/sgx/certification/v4/pckcert";
+const FMSPC_URL: &str = "https://global.acccache.azure.net/sgx/certification/v4/pckcert";
 const TCB_URL: &str = "https://api.trustedservices.intel.com/sgx/certification/v4/tcb";
 const PCKID_CSV_PATH: &str = "/var/cache/intel-sgx/pckid_retrieval.csv";
 
@@ -44,11 +44,20 @@ impl PckCache {
         let report = std::fs::read_to_string(PCKID_CSV_PATH)?;
         let report_parts: Vec<&str> = report.split(',').collect();
         let url = format!(
-            "{FMSPC_URL}/?encrypted_ppid={}&cpusvn={}&pcesvn={}&pceid={}",
-            report_parts[0], report_parts[2], report_parts[3], report_parts[1]
+            "{FMSPC_URL}/?encrypted_ppid={}&cpusvn={}&pcesvn={}&pceid={}&qeid={}",
+            report_parts[0], report_parts[2], report_parts[3], report_parts[1], report_parts[4],
         );
 
-        let (pck_cert, _) = fetch_file(&url).context("Failed to fetch PCK certificate")?;
+        let (response, _) = fetch_file(&url).context("Failed to fetch PCK certificate")?;
+
+        // This section applies when using SGX in Azure VM.
+        // Azure's API returns a json. To get the cert from "pckCert" field.
+        let response_json: serde_json::Value = serde_json::from_slice(&response)?;
+        let pck_cert = response_json["pckCert"]
+            .as_str()
+            .expect("Could not get field pckCert");
+        let pck_cert = pck_cert.as_bytes();
+
         let mut pck_cursor = std::io::Cursor::new(pck_cert);
 
         let pck_cert = rustls_pemfile::certs(&mut pck_cursor)
