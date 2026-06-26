@@ -218,7 +218,7 @@ toml = { version = "0.5.9", default-features = false }
 tracing = { version = "0.1.36", features = ["attributes"], default-features = false }
 tracing-flame = { version = "0.2.0", default-features = false }
 tracing-subscriber = { version = "0.3.15", features = ["env-filter", "fmt"], default-features = false }
-ureq = { version = "2.4.0", default-features = false }
+ureq = { version = "2.4.0", default-features = false, features = ["native-certs"]}
 url = { version = "2.2.2", default-features = false }
 vdso = { version = "0.2.2", default-features = false }
 wat = { version = "1.0.0", default-features = false }
