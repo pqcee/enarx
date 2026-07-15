@@ -1,0 +1,11 @@
+FROM ubuntu:22.04
+
+RUN DEBIAN_FRONTEND=noninteractive apt-get update && \
+    DEBIAN_FRONTEND=noninteractive apt-get install git curl gcc musl-tools python3-minimal -y && \
+    curl -sL https://aka.ms/InstallAzureCLIDeb | bash
+
+# Install Rust for all users
+ENV RUSTUP_HOME=/usr/local/rustup
+ENV CARGO_HOME=/usr/local/cargo
+RUN curl --proto "=https" --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- --default-toolchain nightly -y && \
+    chmod 777 /usr/local/cargo
