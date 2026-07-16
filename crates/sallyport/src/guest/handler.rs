@@ -15,10 +15,11 @@ use crate::libc::{
     SYS_getgid, SYS_getpid, SYS_getrandom, SYS_getsockname, SYS_getuid, SYS_ioctl, SYS_listen,
     SYS_madvise, SYS_mmap, SYS_mprotect, SYS_mremap, SYS_munmap, SYS_nanosleep, SYS_open, SYS_poll,
     SYS_read, SYS_readlink, SYS_readv, SYS_recvfrom, SYS_rt_sigaction, SYS_rt_sigprocmask,
-    SYS_sendto, SYS_set_tid_address, SYS_setsockopt, SYS_sigaltstack, SYS_socket, SYS_sync,
-    SYS_uname, SYS_write, SYS_writev, CLOCK_MONOTONIC, EFAULT, EINVAL, ENOSYS, ENOTSUP, FIONBIO,
-    FIONREAD, FUTEX_PRIVATE_FLAG, FUTEX_WAIT, FUTEX_WAIT_BITSET, FUTEX_WAKE, MAP_ANONYMOUS,
-    MAP_PRIVATE, MREMAP_DONTUNMAP, MREMAP_FIXED, MREMAP_MAYMOVE, PROT_EXEC, PROT_READ, PROT_WRITE,
+    SYS_sendto, SYS_set_tid_address, SYS_setsockopt, SYS_shutdown, SYS_sigaltstack, SYS_socket,
+    SYS_sync, SYS_uname, SYS_write, SYS_writev, CLOCK_MONOTONIC, EFAULT, EINVAL, ENOSYS, ENOTSUP,
+    FIONBIO, FIONREAD, FUTEX_PRIVATE_FLAG, FUTEX_WAIT, FUTEX_WAIT_BITSET, FUTEX_WAKE,
+    MAP_ANONYMOUS, MAP_PRIVATE, MREMAP_DONTUNMAP, MREMAP_FIXED, MREMAP_MAYMOVE, PROT_EXEC,
+    PROT_READ, PROT_WRITE,
 };
 use crate::{item, Result};
 
@@ -1022,6 +1023,7 @@ pub trait Handler {
                 let tidptr = platform.validate_mut(tidptr)?;
                 self.set_tid_address(tidptr).map(|ret| [ret as _, 0])
             }
+            (SYS_shutdown, [..]) => Ok([0, 0]),
             (SYS_sigaltstack, [ss, old_ss, ..]) => {
                 let ss = if ss == 0 {
                     None

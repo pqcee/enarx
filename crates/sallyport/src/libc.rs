@@ -312,6 +312,7 @@ pub const SYS_rt_sigprocmask: c_long = 14;
 pub const SYS_set_tid_address: c_long = 218;
 pub const SYS_sendto: c_long = 44;
 pub const SYS_setsockopt: c_long = 54;
+pub const SYS_shutdown: c_long = 48;
 pub const SYS_sigaltstack: c_long = 131;
 pub const SYS_socket: c_long = 41;
 pub const SYS_sync: c_long = 162;

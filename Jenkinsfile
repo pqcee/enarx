@@ -7,7 +7,8 @@ pipeline {
 
     environment {
         AZURE_CONFIG_DIR = "${env.WORKSPACE}/.azure"
-
+        RUSTUP_HOME = "${env.WORKSPACE}/.rustup"
+        CARGO_HOME  = "${env.WORKSPACE}/.cargo"
     }
 
     stages {
@@ -22,7 +23,7 @@ pipeline {
             steps {
                 script {
                     // Retrieve the latest Git tag
-                    GIT_TAG = sh(script: 'git describe --tags', returnStdout: true).trim()
+                    GIT_TAG = sh(script: 'git describe --tags --always', returnStdout: true).trim()
                     echo "Git Tag: ${GIT_TAG}"
                 }
             }
