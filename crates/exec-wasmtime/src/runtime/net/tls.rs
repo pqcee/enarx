@@ -5,7 +5,7 @@
 use std::any::Any;
 use std::io;
 use std::io::{IoSlice, IoSliceMut, Read, Write};
-use std::sync::Arc;
+use std::sync::{Arc, Mutex};
 
 use anyhow::Context;
 use cap_std::net::{Shutdown, TcpListener as CapListener, TcpStream as CapStream};
@@ -92,7 +92,7 @@ impl IOAsync for Connection {
 
 pub struct Stream {
     tcp: CapStream,
-    tls: Connection,
+    tls: Mutex<Connection>,
     nonblocking: bool,
 }
 
@@ -120,25 +120,26 @@ impl Stream {
                 Error::invalid_argument().context("failed to create a new TLS client connection")
             })?;
 
-        let mut stream = Self {
+        let stream = Self {
             tcp,
-            tls,
+            tls: Mutex::new(tls),
             nonblocking: false, // this is only valid under assumption that this executable has opened the socket
         };
-        stream
-            .complete_io()
-            .map_err(|_| Error::invalid_argument().context("failed to complete connection I/O"))?;
+        {
+            let mut tls = stream.tls.lock().unwrap();
+            stream.complete_io(&mut tls).map_err(|_| {
+                Error::invalid_argument().context("failed to complete connection I/O")
+            })?;
+        }
         Ok(stream)
     }
 
-    fn complete_io(&mut self) -> Result<(), Error> {
+    fn complete_io(&self, tls: &mut Connection) -> Result<(), Error> {
         if self.nonblocking {
-            self.tls
-                .complete_io_async(&mut self.tcp)
+            tls.complete_io_async(&mut &self.tcp)
                 .map_err(<std::io::Error as Into<Error>>::into)?;
         } else {
-            self.tls
-                .complete_io(&mut self.tcp)
+            tls.complete_io(&mut &self.tcp)
                 .map_err(<std::io::Error as Into<Error>>::into)?;
         }
         Ok(())
@@ -191,8 +192,9 @@ impl WasiFile for Stream {
 
     async fn read_vectored<'a>(&self, bufs: &mut [IoSliceMut<'a>]) -> Result<u64, Error> {
         loop {
-            self.complete_io()?;
-            match self.tls.reader().read_vectored(bufs) {
+            let mut tls = self.tls.lock().unwrap();
+            self.complete_io(&mut tls)?;
+            match tls.reader().read_vectored(bufs) {
                 Ok(n) => {
                     return n
                         .try_into()
@@ -205,9 +207,10 @@ impl WasiFile for Stream {
     }
 
     async fn write_vectored<'a>(&self, bufs: &[IoSlice<'a>]) -> Result<u64, Error> {
-        match self.tls.writer().write_vectored(bufs) {
+        let mut tls = self.tls.lock().unwrap();
+        match tls.writer().write_vectored(bufs) {
             Ok(n) => {
-                self.complete_io()?;
+                self.complete_io(&mut tls)?;
                 n.try_into()
                     .map_err(<std::num::TryFromIntError as Into<Error>>::into)
             }
@@ -329,15 +332,18 @@ impl WasiFile for Listener {
 
         let mut stream = Stream {
             tcp,
-            tls,
+            tls: Mutex::new(tls),
             nonblocking: false,
         };
         stream.set_fdflags(FdFlags::empty()).await.map_err(|_| {
             Error::invalid_argument().context("failed to unset client stream FD flags")
         })?;
-        stream
-            .complete_io()
-            .map_err(|_| Error::invalid_argument().context("failed to complete connection I/O"))?;
+        {
+            let mut tls = stream.tls.lock().unwrap();
+            stream.complete_io(&mut tls).map_err(|_| {
+                Error::invalid_argument().context("failed to complete connection I/O")
+            })?;
+        }
         stream.set_fdflags(fdflags).await.map_err(|_| {
             Error::invalid_argument().context("failed to set requested client stream FD flags")
         })?;
