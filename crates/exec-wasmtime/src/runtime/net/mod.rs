@@ -18,7 +18,7 @@ use rustls::cipher_suite::{
 use rustls::kx_group::{SECP256R1, SECP384R1, X25519};
 use rustls::version::TLS13;
 use rustls::{Certificate, PrivateKey, RootCertStore};
-use wasi_common::file::FileCaps;
+use wasi_common::file::FileAccessMode;
 use wasi_common::WasiFile;
 use zeroize::Zeroizing;
 
@@ -32,23 +32,15 @@ static DEFAULT_TLS_CIPHER_SUITES: &[rustls::SupportedCipherSuite] = &[
     TLS13_CHACHA20_POLY1305_SHA256,
 ];
 
-static LISTEN_CAPS: Lazy<FileCaps> = Lazy::new(|| {
-    FileCaps::FILESTAT_GET | FileCaps::FDSTAT_SET_FLAGS | FileCaps::POLL_READWRITE | FileCaps::READ
-});
+static LISTEN_CAPS: Lazy<FileAccessMode> = Lazy::new(|| FileAccessMode::READ);
 
-static CONNECT_CAPS: Lazy<FileCaps> = Lazy::new(|| {
-    FileCaps::FILESTAT_GET
-        | FileCaps::FDSTAT_SET_FLAGS
-        | FileCaps::POLL_READWRITE
-        | FileCaps::READ
-        | FileCaps::WRITE
-});
+static CONNECT_CAPS: Lazy<FileAccessMode> = Lazy::new(|| FileAccessMode::all());
 
 pub fn listen_file(
     file: &ListenFile,
     certs: Vec<Certificate>,
     key: &Zeroizing<Vec<u8>>,
-) -> Result<(Box<dyn WasiFile>, FileCaps)> {
+) -> Result<(Box<dyn WasiFile>, FileAccessMode)> {
     let (addr, port) = match file {
         ListenFile::Tcp { addr, port, .. } | ListenFile::Tls { addr, port, .. } => (addr, port),
     };
@@ -75,7 +67,7 @@ pub fn connect_file(
     file: &ConnectFile,
     certs: Vec<Certificate>,
     key: &Zeroizing<Vec<u8>>,
-) -> Result<(Box<dyn WasiFile>, FileCaps)> {
+) -> Result<(Box<dyn WasiFile>, FileAccessMode)> {
     let (host, port) = match &file {
         ConnectFile::Tcp { host, port, .. } | ConnectFile::Tls { host, port, .. } => (host, port),
     };

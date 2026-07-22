@@ -1,0 +1,45 @@
+Error: failed to execute default function
+
+Caused by:
+    0: error while executing at wasm backtrace:
+           0: 0x196861 - tee_api_server-bce1cc72022a3326.wasm!__wasi_fd_read
+           1: 0x19637f - tee_api_server-bce1cc72022a3326.wasm!readv
+           2: 0x194433 - tee_api_server-bce1cc72022a3326.wasm!<&std[310670df5cc13d55]::net::tcp::TcpStream as std[310670df5cc13d55]::io::Read>::read
+           3: 0x18eaa4 - tee_api_server-bce1cc72022a3326.wasm!<&mio[a255202c9120efd1]::net::tcp::stream::TcpStream as std[310670df5cc13d55]::io::Read>::read
+           4: 0x18c631 - tee_api_server-bce1cc72022a3326.wasm!<tokio[ff37a0d62d18adc3]::io::poll_evented::PollEvented<mio[a255202c9120efd1]::net::tcp::stream::TcpStream>>::poll_read
+           5: 0x18dbaa - tee_api_server-bce1cc72022a3326.wasm!<tokio[ff37a0d62d18adc3]::net::tcp::stream::TcpStream as tokio[ff37a0d62d18adc3]::io::async_read::AsyncRead>::poll_read
+           6: 0x4ec8f - tee_api_server-bce1cc72022a3326.wasm!<hyper_util[ba6fddc5e3e3547d]::rt::tokio::TokioIo<tokio[ff37a0d62d18adc3]::net::tcp::stream::TcpStream> as hyper[a1a017de12869cf2]::rt::io::Read>::poll_read
+           7: 0x4f326 - tee_api_server-bce1cc72022a3326.wasm!<hyper_util[ba6fddc5e3e3547d]::server::conn::auto::UpgradeableConnection<hyper_util[ba6fddc5e3e3547d]::rt::tokio::TokioIo<tokio[ff37a0d62d18adc3]::net::tcp::stream::TcpStream>,
+                                                                     hyper_util[ba6fddc5e3e3547d]::service::glue::TowerToHyperService<tower[fd31c36f8830bc62]::util::map_request::MapRequest<axum[d44cb287e6b20e30]::routing::Router,
+                                                                     axum[d44cb287e6b20e30]::serve::handle_connection<tokio[ff37a0d62d18adc3]::net::tcp::listener::TcpListener,
+                                                                     axum[d44cb287e6b20e30]::routing::Router,
+                                                                    axum[d44cb287e6b20e30]::routing::Router>::{closure#0}::{closure#2}>>,
+                                                                     hyper_util[ba6fddc5e3e3547d]::rt::tokio::TokioExecutor> as core[5fc5b684768b7dfa]::future::future::Future>::poll
+           8: 0x22ee7 - tee_api_server-bce1cc72022a3326.wasm!<core[5fc5b684768b7dfa]::future::poll_fn::PollFn<axum[d44cb287e6b20e30]::serve::handle_connection<tokio[ff37a0d62d18adc3]::net::tcp::listener::TcpListener,
+                                                                     axum[d44cb287e6b20e30]::routing::Router,
+                                                                     axum[d44cb287e6b20e30]::routing::Router>::{closure#0}::{closure#3}::{closure#0}> as core[5fc5b684768b7dfa]::future::future::Future>::poll
+           9: 0x26017 - tee_api_server-bce1cc72022a3326.wasm!<tokio[ff37a0d62d18adc3]::runtime::task::core::Core<axum[d44cb287e6b20e30]::serve::handle_connection<tokio[ff37a0d62d18adc3]::net::tcp::listener::TcpListener,
+                                                                     axum[d44cb287e6b20e30]::routing::Router,
+                                                                     axum[d44cb287e6b20e30]::routing::Router>::{closure#0}::{closure#3},
+                                                                     alloc[3a89b060e961ae38]::sync::Arc<tokio[ff37a0d62d18adc3]::runtime::scheduler::current_thread::Handle>>>::poll
+          10: 0x37c6a - tee_api_server-bce1cc72022a3326.wasm!<tokio[ff37a0d62d18adc3]::runtime::task::harness::Harness<axum[d44cb287e6b20e30]::serve::handle_connection<tokio[ff37a0d62d18adc3]::net::tcp::listener::TcpListener,
+                                                                     axum[d44cb287e6b20e30]::routing::Router,
+                                                                     axum[d44cb287e6b20e30]::routing::Router>::{closure#0}::{closure#3},
+                                                                     alloc[3a89b060e961ae38]::sync::Arc<tokio[ff37a0d62d18adc3]::runtime::scheduler::current_thread::Handle>>>::poll
+          11: 0x46507 - tee_api_server-bce1cc72022a3326.wasm!tokio[ff37a0d62d18adc3]::runtime::task::raw::poll::<axum[d44cb287e6b20e30]::serve::handle_connection<tokio[ff37a0d62d18adc3]::net::tcp::listener::TcpListener,
+                                                                     axum[d44cb287e6b20e30]::routing::Router,
+                                                                     axum[d44cb287e6b20e30]::routing::Router>::{closure#0}::{closure#3},
+                                                                     alloc[3a89b060e961ae38]::sync::Arc<tokio[ff37a0d62d18adc3]::runtime::scheduler::current_thread::Handle>>
+          12: 0x18e2d8 - tee_api_server-bce1cc72022a3326.wasm!<tokio[ff37a0d62d18adc3]::runtime::task::raw::RawTask>::poll13: 0x2b320 - tee_api_server-bce1cc72022a3326.wasm!<tokio[ff37a0d62d18adc3]::runtime::scheduler::current_thread::CoreGuard>::block_on::<core[5fc5b684768b7dfa]::pin::Pin<&mut tee_api_server[9197f0d0bc7b5089]::main::{closure#0}>>
+          14: 0x21c51 - tee_api_server-bce1cc72022a3326.wasm!tokio[ff37a0d62d18adc3]::runtime::context::runtime::enter_runtime::<<tokio[ff37a0d62d18adc3]::runtime::scheduler::current_thread::CurrentThread>::block_on<tee_api_server[9197f0d0bc7b5089]::main::{closure#0}>::{closure#0},
+                                                                     core[5fc5b684768b7dfa]::result::Result<(), alloc[3a89b060e961ae38]::boxed::Box<dyn core[5fc5b684768b7dfa]::error::Error>>>
+          15: 0x2c9db - tee_api_server-bce1cc72022a3326.wasm!tee_api_server[9197f0d0bc7b5089]::main
+          16: 0x25aa9 - tee_api_server-bce1cc72022a3326.wasm!std[310670df5cc13d55]::sys::backtrace::__rust_begin_short_backtrace::<fn() -> core[5fc5b684768b7dfa]::result::Result<(), lloc[3a89b060e961ae38]::boxed::Box<dyn core[5fc5b684768b7dfa]::error::Error>>,
+                                                                     core[5fc5b684768b7dfa]::result::Result<(), alloc[3a89b060e961ae38]::boxed::Box<dyn core[5fc5b684768b7dfa]::error::Error>>>
+          17: 0x2f570 - tee_api_server-bce1cc72022a3326.wasm!std[310670df5cc13d55]::rt::lang_start::<core[5fc5b684768b7dfa]::result::Result<(), alloc[3a89b060e961ae38]::boxed::Box<dyn core[5fc5b684768b7dfa]::error::Error>>>::{closure#0}
+          18: 0x1923b5 - tee_api_server-bce1cc72022a3326.wasm!std[310670df5cc13d55]::rt::lang_start_internal
+          19: 0x2dd5c - tee_api_server-bce1cc72022a3326.wasm!__main_void
+          20: 0x1953 - tee_api_server-bce1cc72022a3326.wasm!_start
+    1: Unknown OS error
+    2: operation would block
+Error: Error("EOF while parsing a value", line: 1, column: 0)
