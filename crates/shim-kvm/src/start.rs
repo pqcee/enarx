@@ -149,7 +149,9 @@ extern "sysv64" fn main(stack_pointer: VirtAddr, wait_ap: *mut AtomicBool, cpunu
     sse::init_sse();
     interrupts::init();
     assert!(!wait_ap.is_null());
-    unsafe { &mut (*wait_ap).store(false, Ordering::SeqCst) };
+    unsafe {
+        let _ = &mut (*wait_ap).store(false, Ordering::SeqCst);
+    };
 
     if cpunum == 0 {
         Lazy::force(&ZERO_PAGE_FRAME);

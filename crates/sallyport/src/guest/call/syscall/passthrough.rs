@@ -5,7 +5,7 @@ use super::Alloc;
 use crate::guest::alloc::{Allocator, Collector};
 use crate::libc::{
     SYS_close, SYS_dup, SYS_dup2, SYS_dup3, SYS_epoll_create1, SYS_eventfd2, SYS_exit,
-    SYS_exit_group, SYS_listen, SYS_socket, SYS_sync,
+    SYS_exit_group, SYS_listen, SYS_shutdown, SYS_socket, SYS_sync,
 };
 use crate::Result;
 
@@ -219,6 +219,22 @@ unsafe impl PassthroughAlloc for Listen {
 
     fn stage(self) -> Self::Argv {
         Argv([self.sockfd as _, self.backlog as _])
+    }
+}
+
+pub struct Shutdown {
+    pub sockfd: c_int,
+    pub how: c_int,
+}
+
+unsafe impl PassthroughAlloc for Shutdown {
+    const NUM: c_long = SYS_shutdown;
+
+    type Argv = Argv<2>;
+    type Ret = c_int;
+
+    fn stage(self) -> Self::Argv {
+        Argv([self.sockfd as _, self.how as _])
     }
 }
 

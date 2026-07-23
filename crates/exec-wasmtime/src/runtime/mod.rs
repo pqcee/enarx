@@ -14,7 +14,7 @@ use super::{Package, Workload};
 
 use anyhow::Context;
 use enarx_config::{Config, File};
-use wasi_common::file::FileCaps;
+use wasi_common::file::FileAccessMode;
 use wasi_common::WasiFile;
 use wasmtime::{AsContextMut, Engine, Linker, Module, Store, Val};
 use wasmtime_wasi::stdio::{stderr, stdin, stdout};
@@ -76,7 +76,7 @@ impl Runtime {
         for (fd, file) in files.iter().enumerate() {
             names.push(file.name());
             let (file, caps): (Box<dyn WasiFile>, _) = match file {
-                File::Null(..) => (Box::new(Null), FileCaps::all()),
+                File::Null(..) => (Box::new(Null), FileAccessMode::all()),
                 File::Stdin(..) => stdio_file(stdin()),
                 File::Stdout(..) => stdio_file(stdout()),
                 File::Stderr(..) => stdio_file(stderr()),
