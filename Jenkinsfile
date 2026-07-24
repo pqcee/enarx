@@ -64,6 +64,14 @@ pipeline {
                             --file enarx.tar.gz \
                             --name ${GIT_TAG}.tar.gz \
                             --account-name ${AZURE_STORAGE_ACCOUNT}
+
+                        # Overwrite the latest blob
+                        az storage blob upload \
+                            --container-name ${AZURE_STORAGE_CONTAINER} \
+                            --file enarx.tar.gz \
+                            --name latest.tar.gz \
+                            --overwrite \
+                            --account-name ${AZURE_STORAGE_ACCOUNT}
                         """
                     }
                 }
