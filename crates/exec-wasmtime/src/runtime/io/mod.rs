@@ -4,15 +4,10 @@
 
 pub mod null;
 
-use wasi_common::file::FileCaps;
-use wasi_common::WasiFile;
+use wasi_common::{file::FileAccessMode, WasiFile};
 
-pub fn stdio_file(mut file: impl WasiFile + 'static) -> (Box<dyn WasiFile>, FileCaps) {
+pub fn stdio_file(file: impl WasiFile + 'static) -> (Box<dyn WasiFile>, FileAccessMode) {
     // Ensure wasmtime can detect the TTY.
-    let caps = if file.isatty() {
-        FileCaps::all().difference(FileCaps::TELL | FileCaps::SEEK)
-    } else {
-        FileCaps::all()
-    };
+    let caps = FileAccessMode::all();
     (Box::new(file), caps)
 }

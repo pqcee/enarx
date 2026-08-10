@@ -652,6 +652,12 @@ pub trait Handler {
         self.execute(syscall::SetTidAddress { tidptr })
     }
 
+    /// Executes [`shutdown`](https://man7.org/linux/man-pages/man2/shutdown.2.html) syscall akin to [`libc::shutdown`].
+    #[inline]
+    fn shutdown(&mut self, sockfd: c_int, how: c_int) -> Result<c_int> {
+        self.execute(syscall::Shutdown { sockfd, how })?
+    }
+
     /// Executes [`sigaltstack`](https://man7.org/linux/man-pages/man2/sigaltstack.2.html) syscall akin to [`libc::sigaltstack`].
     #[inline]
     fn sigaltstack(&mut self, ss: Option<&stack_t>, old_ss: Option<&mut stack_t>) -> Result<()> {
@@ -1023,7 +1029,9 @@ pub trait Handler {
                 let tidptr = platform.validate_mut(tidptr)?;
                 self.set_tid_address(tidptr).map(|ret| [ret as _, 0])
             }
-            (SYS_shutdown, [..]) => Ok([0, 0]),
+            (SYS_shutdown, [sockfd, how, ..]) => self
+                .shutdown(sockfd as _, how as _)
+                .map(|ret| [ret as _, 0]),
             (SYS_sigaltstack, [ss, old_ss, ..]) => {
                 let ss = if ss == 0 {
                     None

@@ -1,0 +1,91 @@
+*   Trying 127.0.0.1:8443...
+* Connected to localhost (127.0.0.1) port 8443 (#0)
+* ALPN, offering h2
+* ALPN, offering http/1.1
+* TLSv1.0 (OUT), TLS header, Certificate Status (22):
+* TLSv1.3 (OUT), TLS handshake, Client hello (1):
+* TLSv1.2 (IN), TLS header, Certificate Status (22):
+* TLSv1.3 (IN), TLS handshake, Server hello (2):
+* TLSv1.2 (IN), TLS header, Finished (20):
+* TLSv1.2 (IN), TLS header, Supplemental data (23):
+* TLSv1.3 (IN), TLS handshake, Encrypted Extensions (8):
+* TLSv1.2 (IN), TLS header, Supplemental data (23):
+* TLSv1.3 (IN), TLS handshake, Certificate (11):
+* TLSv1.2 (IN), TLS header, Supplemental data (23):
+* TLSv1.3 (IN), TLS handshake, CERT verify (15):
+* TLSv1.2 (IN), TLS header, Supplemental data (23):
+* TLSv1.3 (IN), TLS handshake, Finished (20):
+* TLSv1.2 (OUT), TLS header, Finished (20):
+* TLSv1.3 (OUT), TLS change cipher, Change cipher spec (1):
+* TLSv1.2 (OUT), TLS header, Supplemental data (23):
+* TLSv1.3 (OUT), TLS handshake, Finished (20):
+* SSL connection using TLSv1.3 / TLS_AES_256_GCM_SHA384
+* ALPN, server did not agree to a protocol
+* Server certificate:
+*  subject: CN=localhost
+*  start date: Jul 20 03:28:31 2026 GMT
+*  expire date: Jul 20 03:28:31 2027 GMT
+*  issuer: CN=localhost
+*  SSL certificate verify result: self-signed certificate (18), continuing anyway.
+* TLSv1.2 (OUT), TLS header, Supplemental data (23):
+> GET /init/v1/init_server HTTP/1.1
+> Host: localhost:8443
+> User-Agent: curl/7.81.0
+> Accept: */*
+>
+* TLSv1.2 (IN), TLS header, Supplemental data (23):
+* TLSv1.3 (IN), TLS handshake, Newsession Ticket (4):
+* TLSv1.2 (OUT), TLS header, Supplemental data (23):
+* TLSv1.3 (OUT), TLS alert, decode error (562):
+* OpenSSL SSL_read: error:0A000126:SSL routines::unexpected eof while reading, errno 0
+* Closing connection 0
+curl: (56) OpenSSL SSL_read: error:0A000126:SSL routines::unexpected eof while reading, errno 0
+
+Error: failed to execute default function
+<br>
+Caused by:
+    0: error while executing at wasm backtrace:
+           0: 0x196861 - tee_api_server-bce1cc72022a3326.wasm!__wasi_fd_read
+           1: 0x19637f - tee_api_server-bce1cc72022a3326.wasm!readv
+           2: 0x194433 - tee_api_server-bce1cc72022a3326.wasm!<&std[310670df5cc13d55]::net::tcp::TcpStream as std[310670df5cc13d55]::io::Read>::read
+           3: 0x18eaa4 - tee_api_server-bce1cc72022a3326.wasm!<&mio[a255202c9120efd1]::net::tcp::stream::TcpStream as std[310670df5cc13d55]::io::Read>::read
+           4: 0x18c631 - tee_api_server-bce1cc72022a3326.wasm!<tokio[ff37a0d62d18adc3]::io::poll_evented::PollEvented<mio[a255202c9120efd1]::net::tcp::stream::TcpStream>>::poll_read
+           5: 0x18dbaa - tee_api_server-bce1cc72022a3326.wasm!<tokio[ff37a0d62d18adc3]::net::tcp::stream::TcpStream as tokio[ff37a0d62d18adc3]::io::async_read::AsyncRead>::poll_read
+           6: 0x4ec8f - tee_api_server-bce1cc72022a3326.wasm!<hyper_util[ba6fddc5e3e3547d]::rt::tokio::TokioIo<tokio[ff37a0d62d18adc3]::net::tcp::stream::TcpStream> as hyper[a1a017de12869cf2]::rt::io::Read>::poll_read
+           7: 0x1f83e - tee_api_server-bce1cc72022a3326.wasm!<hyper_util[ba6fddc5e3e3547d]::common::rewind::Rewind<hyper_util[ba6fddc5e3e3547d]::rt::tokio::TokioIo<tokio[ff37a0d62d18adc3]::net::tcp::stream::TcpStream>> as hyper[a1a017de12869cf2]::rt::io::Read>::poll_read
+           8: 0x4aedb - tee_api_server-bce1cc72022a3326.wasm!<hyper[a1a017de12869cf2]::proto::h1::io::Buffered<hyper_util[ba6fddc5e3e3547d]::common::rewind::Rewind<hyper_util[ba6fddc5e3e3547d]::rt::tokio::TokioIo<tokio[ff37a0d62d18adc3]::net::tcp::stream::TcpStream>>, hyper[a1a017d
+e12869cf2]::proto::h1::encode::EncodedBuf<bytes[a85d79d22cf50026]::bytes::Bytes>>>::poll_read_from_io
+           9: 0x3484b - tee_api_server-bce1cc72022a3326.wasm!<hyper[a1a017de12869cf2]::proto::h1::conn::Conn<hyper_util[ba6fddc5e3e3547d]::common::rewind::Rewind<hyper_util[ba6fddc5e3e3547d]::rt::tokio::TokioIo<tokio[ff37a0d62d18adc3]::net::tcp::stream::TcpStream>>, bytes[a85d79d22
+cf50026]::bytes::Bytes, hyper[a1a017de12869cf2]::proto::h1::role::Server>>::poll_read_keep_alive
+          10: 0x48441 - tee_api_server-bce1cc72022a3326.wasm!<hyper[a1a017de12869cf2]::proto::h1::dispatch::Dispatcher<hyper[a1a017de12869cf2]::proto::h1::dispatch::Server<hyper_util[ba6fddc5e3e3547d]::service::glue::TowerToHyperService<tower[fd31c36f8830bc62]::util::map_request::M
+apRequest<axum[d44cb287e6b20e30]::routing::Router, axum[d44cb287e6b20e30]::serve::handle_connection<tokio[ff37a0d62d18adc3]::net::tcp::listener::TcpListener, axum[d44cb287e6b20e30]::routing::Router, axum[d44cb287e6b20e30]::routing::Router>::{closure#0}::{closure#2}>>, hyper[a1a017d
+e12869cf2]::body::incoming::Incoming>, axum_core[7ccac3d6c5a20fce]::body::Body, hyper_util[ba6fddc5e3e3547d]::common::rewind::Rewind<hyper_util[ba6fddc5e3e3547d]::rt::tokio::TokioIo<tokio[ff37a0d62d18adc3]::net::tcp::stream::TcpStream>>, hyper[a1a017de12869cf2]::proto::h1::role::Se
+rver>>::poll_catch
+          11: 0x28dea - tee_api_server-bce1cc72022a3326.wasm!<hyper[a1a017de12869cf2]::server::conn::http1::UpgradeableConnection<hyper_util[ba6fddc5e3e3547d]::common::rewind::Rewind<hyper_util[ba6fddc5e3e3547d]::rt::tokio::TokioIo<tokio[ff37a0d62d18adc3]::net::tcp::stream::TcpStre
+am>>, hyper_util[ba6fddc5e3e3547d]::service::glue::TowerToHyperService<tower[fd31c36f8830bc62]::util::map_request::MapRequest<axum[d44cb287e6b20e30]::routing::Router, axum[d44cb287e6b20e30]::serve::handle_connection<tokio[ff37a0d62d18adc3]::net::tcp::listener::TcpListener, axum[d44
+cb287e6b20e30]::routing::Router, axum[d44cb287e6b20e30]::routing::Router>::{closure#0}::{closure#2}>>> as core[5fc5b684768b7dfa]::future::future::Future>::poll
+          12: 0x4f46c - tee_api_server-bce1cc72022a3326.wasm!<hyper_util[ba6fddc5e3e3547d]::server::conn::auto::UpgradeableConnection<hyper_util[ba6fddc5e3e3547d]::rt::tokio::TokioIo<tokio[ff37a0d62d18adc3]::net::tcp::stream::TcpStream>, hyper_util[ba6fddc5e3e3547d]::service::glue:
+:TowerToHyperService<tower[fd31c36f8830bc62]::util::map_request::MapRequest<axum[d44cb287e6b20e30]::routing::Router, axum[d44cb287e6b20e30]::serve::handle_connection<tokio[ff37a0d62d18adc3]::net::tcp::listener::TcpListener, axum[d44cb287e6b20e30]::routing::Router, axum[d44cb287e6b2
+0e30]::routing::Router>::{closure#0}::{closure#2}>>, hyper_util[ba6fddc5e3e3547d]::rt::tokio::TokioExecutor> as core[5fc5b684768b7dfa]::future::future::Future>::poll
+          13: 0x230ab - tee_api_server-bce1cc72022a3326.wasm!<core[5fc5b684768b7dfa]::future::poll_fn::PollFn<axum[d44cb287e6b20e30]::serve::handle_connection<tokio[ff37a0d62d18adc3]::net::tcp::listener::TcpListener, axum[d44cb287e6b20e30]::routing::Router, axum[d44cb287e6b20e30]::
+routing::Router>::{closure#0}::{closure#3}::{closure#0}> as core[5fc5b684768b7dfa]::future::future::Future>::poll
+          14: 0x26017 - tee_api_server-bce1cc72022a3326.wasm!<tokio[ff37a0d62d18adc3]::runtime::task::core::Core<axum[d44cb287e6b20e30]::serve::handle_connection<tokio[ff37a0d62d18adc3]::net::tcp::listener::TcpListener, axum[d44cb287e6b20e30]::routing::Router, axum[d44cb287e6b20e30
+]::routing::Router>::{closure#0}::{closure#3}, alloc[3a89b060e961ae38]::sync::Arc<tokio[ff37a0d62d18adc3]::runtime::scheduler::current_thread::Handle>>>::poll
+          15: 0x37c6a - tee_api_server-bce1cc72022a3326.wasm!<tokio[ff37a0d62d18adc3]::runtime::task::harness::Harness<axum[d44cb287e6b20e30]::serve::handle_connection<tokio[ff37a0d62d18adc3]::net::tcp::listener::TcpListener, axum[d44cb287e6b20e30]::routing::Router, axum[d44cb287e6
+b20e30]::routing::Router>::{closure#0}::{closure#3}, alloc[3a89b060e961ae38]::sync::Arc<tokio[ff37a0d62d18adc3]::runtime::scheduler::current_thread::Handle>>>::poll
+          16: 0x46507 - tee_api_server-bce1cc72022a3326.wasm!tokio[ff37a0d62d18adc3]::runtime::task::raw::poll::<axum[d44cb287e6b20e30]::serve::handle_connection<tokio[ff37a0d62d18adc3]::net::tcp::listener::TcpListener, axum[d44cb287e6b20e30]::routing::Router, axum[d44cb287e6b20e30
+]::routing::Router>::{closure#0}::{closure#3}, alloc[3a89b060e961ae38]::sync::Arc<tokio[ff37a0d62d18adc3]::runtime::scheduler::current_thread::Handle>>
+          17: 0x18e2d8 - tee_api_server-bce1cc72022a3326.wasm!<tokio[ff37a0d62d18adc3]::runtime::task::raw::RawTask>::poll
+          18: 0x2b320 - tee_api_server-bce1cc72022a3326.wasm!<tokio[ff37a0d62d18adc3]::runtime::scheduler::current_thread::CoreGuard>::block_on::<core[5fc5b684768b7dfa]::pin::Pin<&mut tee_api_server[9197f0d0bc7b5089]::main::{closure#0}>>
+          19: 0x21c51 - tee_api_server-bce1cc72022a3326.wasm!tokio[ff37a0d62d18adc3]::runtime::context::runtime::enter_runtime::<<tokio[ff37a0d62d18adc3]::runtime::scheduler::current_thread::CurrentThread>::block_on<tee_api_server[9197f0d0bc7b5089]::main::{closure#0}>::{closure#0},
+ core[5fc5b684768b7dfa]::result::Result<(), alloc[3a89b060e961ae38]::boxed::Box<dyn core[5fc5b684768b7dfa]::error::Error>>>
+          20: 0x2c9db - tee_api_server-bce1cc72022a3326.wasm!tee_api_server[9197f0d0bc7b5089]::main
+          21: 0x25aa9 - tee_api_server-bce1cc72022a3326.wasm!std[310670df5cc13d55]::sys::backtrace::__rust_begin_short_backtrace::<fn() -> core[5fc5b684768b7dfa]::result::Result<(), alloc[3a89b060e961ae38]::boxed::Box<dyn core[5fc5b684768b7dfa]::error::Error>>, core[5fc5b684768b7df
+a]::result::Result<(), alloc[3a89b060e961ae38]::boxed::Box<dyn core[5fc5b684768b7dfa]::error::Error>>>
+          22: 0x2f570 - tee_api_server-bce1cc72022a3326.wasm!std[310670df5cc13d55]::rt::lang_start::<core[5fc5b684768b7dfa]::result::Result<(), alloc[3a89b060e961ae38]::boxed::Box<dyn core[5fc5b684768b7dfa]::error::Error>>>::{closure#0}
+          23: 0x1923b5 - tee_api_server-bce1cc72022a3326.wasm!std[310670df5cc13d55]::rt::lang_start_internal
+          24: 0x2dd5c - tee_api_server-bce1cc72022a3326.wasm!__main_void
+          25: 0x1953 - tee_api_server-bce1cc72022a3326.wasm!_start
+    1: Unknown OS error
+    2: operation would block
+<br>
